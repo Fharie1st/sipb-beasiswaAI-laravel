@@ -44,9 +44,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('predictions', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('user_id');
-            $table->dropColumn(['prodi', 'sks', 'tanggungan', 'prediction', 'accuracy']);
-        });
+    $table->unsignedBigInteger('user_id');
+});
 
         DB::statement('ALTER TABLE predictions MODIFY nama VARCHAR(255) NOT NULL');
         DB::statement('ALTER TABLE predictions MODIFY kehadiran INT NOT NULL');
