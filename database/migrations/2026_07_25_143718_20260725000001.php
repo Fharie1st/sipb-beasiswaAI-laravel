@@ -16,36 +16,55 @@ return new class extends Migration
      * nullable karena alur baru tidak lagi mengisi field tersebut, tapi
      * data yang sudah ada di kolom itu tetap dibiarkan seperti semula.
      */
-    public function up(): void
-    {
+public function up(): void
+{
+    if (!Schema::hasColumn('predictions', 'user_id')) {
         Schema::table('predictions', function (Blueprint $table) {
             $table->foreignId('user_id')
                 ->nullable()
                 ->after('id')
                 ->constrained()
                 ->nullOnDelete();
-
-            $table->string('prodi')->nullable()->after('user_id');
-            $table->unsignedInteger('sks')->nullable()->after('ipk');
-            $table->unsignedInteger('tanggungan')->nullable()->after('penghasilan');
-            $table->boolean('prediction')->nullable()->after('organisasi');
-            $table->decimal('accuracy', 5, 2)->nullable()->after('confidence');
         });
-
-        // Catatan: perintah MODIFY di bawah ini sintaks MySQL/MariaDB.
-        // Kalau kamu pakai database lain (PostgreSQL/SQLite), kasih tahu
-        // saya supaya saya sesuaikan sintaksnya.
-        DB::statement('ALTER TABLE predictions MODIFY nama VARCHAR(255) NULL');
-        DB::statement('ALTER TABLE predictions MODIFY kehadiran INT NULL');
-        DB::statement('ALTER TABLE predictions MODIFY prestasi VARCHAR(255) NULL');
-        DB::statement('ALTER TABLE predictions MODIFY semester INT NULL');
     }
 
-    public function down(): void
-    {
+    if (!Schema::hasColumn('predictions', 'prodi')) {
         Schema::table('predictions', function (Blueprint $table) {
-    $table->unsignedBigInteger('user_id');
-});
+            $table->string('prodi')->nullable();
+        });
+    }
+
+    if (!Schema::hasColumn('predictions', 'sks')) {
+        Schema::table('predictions', function (Blueprint $table) {
+            $table->unsignedInteger('sks')->nullable();
+        });
+    }
+
+    if (!Schema::hasColumn('predictions', 'tanggungan')) {
+        Schema::table('predictions', function (Blueprint $table) {
+            $table->unsignedInteger('tanggungan')->nullable();
+        });
+    }
+
+    if (!Schema::hasColumn('predictions', 'prediction')) {
+        Schema::table('predictions', function (Blueprint $table) {
+            $table->boolean('prediction')->nullable();
+        });
+    }
+
+    if (!Schema::hasColumn('predictions', 'accuracy')) {
+        Schema::table('predictions', function (Blueprint $table) {
+            $table->decimal('accuracy', 5, 2)->nullable();
+        });
+    }
+}
+
+
+
+public function down(): void
+{
+    //
+}
 
         DB::statement('ALTER TABLE predictions MODIFY nama VARCHAR(255) NOT NULL');
         DB::statement('ALTER TABLE predictions MODIFY kehadiran INT NOT NULL');
