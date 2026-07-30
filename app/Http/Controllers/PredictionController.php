@@ -217,14 +217,13 @@ public function __construct()
                 'nama' => Auth::user()->name,
                 'prodi' => $validated['prodi'],
                 'ipk' => $validated['ipk'],
-                'sks' => $validated['sks'],
-                'penghasilan' => $penghasilanValue,
-                'tanggungan' => $validated['tanggungan'],
+                'kehadiran' => 0,
+                'prestasi' => 'Tidak',
                 'organisasi' => $validated['organisasi'],
-                'prediction' => $result['prediction'] ?? 0,
+                'penghasilan' => $penghasilanValue,
+                'semester' => 1,
                 'hasil' => $result['prediction'] ?? 0,
                 'confidence' => $result['confidence'] ?? 0,
-                'accuracy' => $result['accuracy'] ?? null,
             ]);
 
             return response()->json($result);
