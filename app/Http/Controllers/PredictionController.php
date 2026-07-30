@@ -155,14 +155,25 @@ public function __construct()
      */
 public function predict(Request $request)
 {
-    $validated = $request->validate([
-        'prodi' => 'required|string',
-        'ipk' => 'required|numeric|min:0|max:4',
-        'sks' => 'required|numeric|min:0',
-        'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
-        'tanggungan' => 'required|numeric|min:0',
-        'organisasi' => 'required|string|in:Ya,Tidak',
-    ]);
+Prediction::create([
+    'user_id' => Auth::id(),
+    'prodi' => $validated['prodi'],
+    'ipk' => $validated['ipk'],
+    'sks' => $validated['sks'],
+
+    'penghasilan' => match ($validated['penghasilan']) {
+        'Rendah' => 1,
+        'Sedang' => 2,
+        'Tinggi' => 3,
+        default => 1,
+    },
+
+    'tanggungan' => $validated['tanggungan'],
+    'organisasi' => $validated['organisasi'],
+    'prediction' => $result['prediction'] ?? 0,
+    'confidence' => $result['confidence'] ?? 0,
+    'accuracy' => $result['accuracy'] ?? null,
+]);
 
     $flaskPayload = [
         'Prodi' => $validated['prodi'],
