@@ -214,6 +214,7 @@ public function __construct()
             //    Flask didapat, agar prediction/confidence/accuracy terisi benar)
             Prediction::create([
                 'user_id' => Auth::id(),
+                'nama' => Auth::user()->name,
                 'prodi' => $validated['prodi'],
                 'ipk' => $validated['ipk'],
                 'sks' => $validated['sks'],
