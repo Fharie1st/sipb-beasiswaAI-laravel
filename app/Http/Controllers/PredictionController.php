@@ -153,74 +153,75 @@ public function __construct()
      * supaya bisa muncul di tab Riwayat. Dipanggil via fetch dari chat.js,
      * jadi HARUS selalu balikin JSON, bukan view.
      */
-    public function predict(Request $request)
-    {
-        $validated = $request->validate([
-            'prodi'       => 'required|string',
-            'ipk'         => 'required|numeric|min:0|max:4',
-            'sks'         => 'required|numeric|min:0',
-            'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
-            'tanggungan'  => 'required|numeric|min:0',
-            'Ikut Organisasi' => $validated['organisasi'] === 'Ya'
-                ? 'Ikut'
-                : 'Tidak',
-        ]);
+public function predict(Request $request)
+{
+    $validated = $request->validate([
+        'prodi' => 'required|string',
+        'ipk' => 'required|numeric|min:0|max:4',
+        'sks' => 'required|numeric|min:0',
+        'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
+        'tanggungan' => 'required|numeric|min:0',
+        'organisasi' => 'required|string|in:Ya,Tidak',
+    ]);
 
-        $flaskPayload = [
-    'Prodi' => $validated['prodi'],
-    'IPK' => $validated['ipk'],
-    'SKS' => $validated['sks'],
-    'Penghasilan' => $validated['penghasilan'],
-    'Tanggungan' => $validated['tanggungan'],
-    'Ikut Organisasi' => $validated['organisasi'] === 'Ya'
-        ? 'Ikut'
-        : 'Tidak',
-];
+    $flaskPayload = [
+        'Prodi' => $validated['prodi'],
+        'IPK' => $validated['ipk'],
+        'SKS' => $validated['sks'],
+        'Penghasilan' => $validated['penghasilan'],
+        'Tanggungan' => $validated['tanggungan'],
+        'Ikut Organisasi' => $validated['organisasi'],
+    ];
 
-        try {
+    try {
+        $response = Http::timeout(15)->post(
+            "{$this->flaskUrl}/predict",
+            $flaskPayload
+        );
 
-            $response = Http::timeout(15)->post("{$this->flaskUrl}/predict", $flaskPayload);
+        if (! $response->successful()) {
+            $flaskError = $response->json();
 
-            if (! $response->successful()) {
-
-                $flaskError = $response->json();
-
-                Log::error('PREDICT - Flask returned error: ' . json_encode($flaskError));
-
-                return response()->json([
-                    'success' => false,
-                    'message' => $flaskError['message'] ?? 'Gagal menghubungi sistem prediksi.',
-                ], $response->status());
-            }
-
-            $result = $response->json();
-
-            Prediction::create([
-            'user_id'     => Auth::id(),
-            'prodi'       => $validated['prodi'],
-            'ipk'         => $validated['ipk'],
-            'sks'         => $validated['sks'],
-            'penghasilan' => $validated['penghasilan'],
-            'tanggungan'  => $validated['tanggungan'],
-            'organisasi'  => $validated['organisasi'],
-            'prediction'  => $result['prediction'] ?? 0,
-            'confidence'  => $result['confidence'] ?? 0,
-            'accuracy'    => $result['accuracy'] ?? null,
-        ]);
-
-            return response()->json($result);
-
-        } catch (\Exception $e) {
-
-            Log::error('PREDICT - Flask connection failed: ' . $e->getMessage());
+            Log::error(
+                'PREDICT - Flask returned error: ' .
+                json_encode($flaskError)
+            );
 
             return response()->json([
                 'success' => false,
-                'message' => 'Server Machine Learning belum dijalankan.',
-            ], 500);
-
+                'message' => $flaskError['message']
+                    ?? 'Gagal menghubungi sistem prediksi.',
+            ], $response->status());
         }
+
+        $result = $response->json();
+
+        Prediction::create([
+            'user_id' => Auth::id(),
+            'prodi' => $validated['prodi'],
+            'ipk' => $validated['ipk'],
+            'sks' => $validated['sks'],
+            'penghasilan' => $validated['penghasilan'],
+            'tanggungan' => $validated['tanggungan'],
+            'organisasi' => $validated['organisasi'],
+            'prediction' => $result['prediction'] ?? 0,
+            'confidence' => $result['confidence'] ?? 0,
+            'accuracy' => $result['accuracy'] ?? null,
+        ]);
+
+        return response()->json($result);
+    } catch (\Exception $e) {
+        Log::error(
+            'PREDICT - Flask connection failed: ' .
+            $e->getMessage()
+        );
+
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 500);
     }
+}
 
     /**
      * Proses tanya-jawab bebas ke ScholarAI Assistant (Flask /ask).
