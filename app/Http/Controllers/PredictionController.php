@@ -161,7 +161,9 @@ public function __construct()
             'sks'         => 'required|numeric|min:0',
             'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
             'tanggungan'  => 'required|numeric|min:0',
-            'organisasi'  => 'required|string|in:Ya,Tidak',
+            'Ikut Organisasi' => $validated['organisasi'] === 'Ya'
+                ? 'Ikut'
+                : 'Tidak',
         ]);
 
         $flaskPayload = [
