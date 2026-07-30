@@ -10,18 +10,19 @@ class Prediction extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'prodi',
-        'ipk',
-        'sks',
-        'penghasilan',
-        'tanggungan',
-        'organisasi',
-        'prediction',
-        'confidence',
-        'accuracy',
-    ];
+protected $fillable = [
+    'user_id',
+    'nama',
+    'ipk',
+    'kehadiran',
+    'prestasi',
+    'organisasi',
+    'penghasilan',
+    'semester',
+    'hasil',
+    'confidence',
+    'prodi',
+];
 
     protected $casts = [
         'prediction' => 'boolean',
