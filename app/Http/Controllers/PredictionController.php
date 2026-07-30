@@ -222,6 +222,7 @@ public function __construct()
                 'tanggungan' => $validated['tanggungan'],
                 'organisasi' => $validated['organisasi'],
                 'prediction' => $result['prediction'] ?? 0,
+                'hasil' => $result['prediction'] ?? 0,
                 'confidence' => $result['confidence'] ?? 0,
                 'accuracy' => $result['accuracy'] ?? null,
             ]);
@@ -292,6 +293,7 @@ public function __construct()
             ->map(function ($p) {
                 return [
                     'id'          => $p->id,
+                    'nama'        => $p->nama,
                     'prodi'       => $p->prodi,
                     'ipk'         => $p->ipk,
                     'sks'         => $p->sks,
@@ -344,6 +346,7 @@ public function __construct()
             'message' => 'Data berhasil diperbarui.',
             'data'    => [
                 'id'          => $predictionItem->id,
+                'nama'        => $predictionItem->nama,
                 'prodi'       => $predictionItem->prodi,
                 'ipk'         => $predictionItem->ipk,
                 'sks'         => $predictionItem->sks,
