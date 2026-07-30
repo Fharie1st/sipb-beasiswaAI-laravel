@@ -12,16 +12,20 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('nama');
-            $table->float('ipk');
-            $table->integer('kehadiran');
-            $table->string('prestasi');
-            $table->string('organisasi');
-            $table->bigInteger('penghasilan');
-            $table->integer('semester');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('hasil')->nullable();
+            $table->string('prodi');
+            $table->float('ipk');
+            $table->integer('sks');
+
+            $table->string('penghasilan');
+            $table->integer('tanggungan');
+
+            $table->string('organisasi');
+
+            $table->integer('prediction')->nullable();
             $table->double('confidence')->nullable();
+            $table->double('accuracy')->nullable();
 
             $table->timestamps();
         });
