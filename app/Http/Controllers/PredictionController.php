@@ -167,13 +167,15 @@ public function __construct()
         ]);
 
         $flaskPayload = [
-            'Prodi'            => $validated['prodi'],
-            'IPK'              => $validated['ipk'],
-            'SKS'              => $validated['sks'],
-            'Penghasilan'      => $validated['penghasilan'],
-            'Tanggungan'       => $validated['tanggungan'],
-            'Ikut Organisasi' => $validated['organisasi'],
-        ];
+    'Prodi' => $validated['prodi'],
+    'IPK' => $validated['ipk'],
+    'SKS' => $validated['sks'],
+    'Penghasilan' => $validated['penghasilan'],
+    'Tanggungan' => $validated['tanggungan'],
+    'Ikut Organisasi' => $validated['organisasi'] === 'Ya'
+        ? 'Ikut'
+        : 'Tidak',
+];
 
         try {
 
