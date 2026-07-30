@@ -441,7 +441,7 @@ function renderHistoryList() {
     wrapper.className = "history-list";
 
     wrapper.innerHTML = historyCache.map(item => {
-        const isEligible = !!item.hasil;
+        const isEligible = Number(item.prediction) === 1;
         const status = isEligible ? "Layak Menerima Beasiswa" : "Belum Layak Menerima Beasiswa";
         const color = isEligible ? "#1a9d4c" : "#d63b3b";
 
