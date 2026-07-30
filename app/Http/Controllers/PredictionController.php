@@ -306,11 +306,17 @@ public function __construct()
                 ];
             });
 
-        return response()->json([
-            'success' => true,
-            'data'    => $predictions,
-        ]);
-    }
+        return [
+            'id' => $p->id,
+            'nama' => $p->nama,
+            'prodi' => $p->prodi,
+            'ipk' => $p->ipk,
+            'penghasilan' => $p->penghasilan,
+            'organisasi' => $p->organisasi,
+            'prediction' => $p->hasil,
+            'confidence' => $p->confidence,
+            'created_at' => $p->created_at->format('d M Y, H:i'),
+        ];
 
     /**
      * Update satu data riwayat prediksi milik user yang sedang login.
