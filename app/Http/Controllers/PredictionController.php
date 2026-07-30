@@ -19,10 +19,10 @@ class PredictionController extends Controller
      */
     protected string $flaskUrl;
 
-public function __construct()
-{
-    $this->flaskUrl = env('FLASK_URL');
-}
+    public function __construct()
+    {
+        $this->flaskUrl = env('FLASK_URL');
+    }
 
     /**
      * Halaman pilihan fitur
@@ -213,17 +213,17 @@ public function __construct()
             // 4. Simpan hasil ke database (HANYA SATU KALI, setelah hasil dari
             //    Flask didapat, agar prediction/confidence/accuracy terisi benar)
             Prediction::create([
-                'user_id' => Auth::id(),
-                'nama' => Auth::user()->name,
-                'prodi' => $validated['prodi'],
-                'ipk' => $validated['ipk'],
-                'kehadiran' => 0,
-                'prestasi' => 'Tidak',
-                'organisasi' => $validated['organisasi'],
+                'user_id'     => Auth::id(),
+                'nama'        => Auth::user()->name,
+                'prodi'       => $validated['prodi'],
+                'ipk'         => $validated['ipk'],
+                'sks'         => $validated['sks'],
                 'penghasilan' => $penghasilanValue,
-                'semester' => 1,
-                'hasil' => $result['prediction'] ?? 0,
-                'confidence' => $result['confidence'] ?? 0,
+                'tanggungan'  => $validated['tanggungan'],
+                'organisasi'  => $validated['organisasi'],
+                'prediction'  => $result['prediction'] ?? 0,
+                'confidence'  => $result['confidence'] ?? 0,
+                'accuracy'    => $result['accuracy'] ?? 0,
             ]);
 
             return response()->json($result);
@@ -250,31 +250,25 @@ public function __construct()
         ]);
 
         try {
-
             $response = Http::timeout(15)->post("{$this->flaskUrl}/ask", [
                 'question' => $request->input('question'),
             ]);
 
             if ($response->successful()) {
-
                 $data = $response->json();
 
                 return response()->json([
                     'answer' => $data['answer'] ?? 'Maaf, saya belum bisa menjawab pertanyaan itu.',
                 ]);
-
             }
 
             return response()->json([
                 'answer' => 'Maaf, terjadi kendala saat menghubungi ScholarAI Assistant.',
             ], $response->status());
-
         } catch (\Exception $e) {
-
             return response()->json([
                 'answer' => 'Server AI Assistant belum dijalankan.',
             ], 500);
-
         }
     }
 
@@ -306,17 +300,8 @@ public function __construct()
                 ];
             });
 
-        return [
-            'id' => $p->id,
-            'nama' => $p->nama,
-            'prodi' => $p->prodi,
-            'ipk' => $p->ipk,
-            'penghasilan' => $p->penghasilan,
-            'organisasi' => $p->organisasi,
-            'prediction' => $p->hasil,
-            'confidence' => $p->confidence,
-            'created_at' => $p->created_at->format('d M Y, H:i'),
-        ];
+        return response()->json($predictions);
+    }
 
     /**
      * Update satu data riwayat prediksi milik user yang sedang login.
