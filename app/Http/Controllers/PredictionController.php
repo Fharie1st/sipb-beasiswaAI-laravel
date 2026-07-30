@@ -285,18 +285,15 @@ class PredictionController extends Controller
             ->get()
             ->map(function ($p) {
                 return [
-                    'id'          => $p->id,
-                    'nama'        => $p->nama,
-                    'prodi'       => $p->prodi,
-                    'ipk'         => $p->ipk,
-                    'sks'         => $p->sks,
+                    'id' => $p->id,
+                    'nama' => $p->nama,
+                    'prodi' => $p->prodi,
+                    'ipk' => $p->ipk,
                     'penghasilan' => $p->penghasilan,
-                    'tanggungan'  => $p->tanggungan,
-                    'organisasi'  => $p->organisasi,
-                    'prediction'  => $p->prediction,
-                    'confidence'  => $p->confidence,
-                    'accuracy'    => $p->accuracy,
-                    'created_at'  => $p->created_at->format('d M Y, H:i'),
+                    'organisasi' => $p->organisasi,
+                    'prediction' => $p->hasil,
+                    'confidence' => $p->confidence,
+                    'created_at' => $p->created_at->format('d M Y, H:i'),
                 ];
             });
 
