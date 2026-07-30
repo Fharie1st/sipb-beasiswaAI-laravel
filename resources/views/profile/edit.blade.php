@@ -32,11 +32,6 @@
                             <div class="card-body d-flex flex-column align-items-center justify-content-center">
                                 <div class="position-relative mb-3">
                                     @if($user->avatar)
-                                        <img src="{{ $user->avatar }}" alt="Avatar" class="rounded-circle shadow" style="width: 110px; height: 110px; object-fit: cover;">
-                                    @else
-                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow" style="width: 110px; height: 110px; font-size: 38px; font-weight: bold;">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                                        </div>
                                     @endif
                                 </div>
                                 <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
