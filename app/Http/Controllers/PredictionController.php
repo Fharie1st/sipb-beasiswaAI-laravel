@@ -115,37 +115,10 @@ class PredictionController extends Controller
         $info = getimagesize($path);
         $type = $info[2] ?? null;
 
-        $source = match ($type) {
-            IMAGETYPE_JPEG => imagecreatefromjpeg($path),
-            IMAGETYPE_PNG  => imagecreatefrompng($path),
-            IMAGETYPE_GIF  => imagecreatefromgif($path),
-            default        => imagecreatefromstring(file_get_contents($path)),
-        };
-
-        $width  = imagesx($source);
-        $height = imagesy($source);
-
-        // Jangan diperbesar kalau fotonya memang sudah kecil, cukup di-cap maksimal
-        $ratio     = min($maxSize / $width, $maxSize / $height, 1);
-        $newWidth  = max(1, (int) round($width * $ratio));
-        $newHeight = max(1, (int) round($height * $ratio));
-
-        $resized = imagecreatetruecolor($newWidth, $newHeight);
-
-        // Kasih background putih dulu (biar PNG transparan gak jadi hitam pas dijadiin JPEG)
-        $white = imagecolorallocate($resized, 255, 255, 255);
-        imagefill($resized, 0, 0, $white);
-
-        imagecopyresampled($resized, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-        ob_start();
-        imagejpeg($resized, null, $quality);
-        $data = ob_get_clean();
-
-        imagedestroy($source);
-        imagedestroy($resized);
-
+        $data = file_get_contents($path);
+        
         return 'data:image/jpeg;base64,' . base64_encode($data);
+
     }
 
     /**
