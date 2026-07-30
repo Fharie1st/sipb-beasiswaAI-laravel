@@ -170,8 +170,10 @@ public function predict(Request $request)
         'SKS' => $validated['sks'],
         'Penghasilan' => $validated['penghasilan'],
         'Tanggungan' => $validated['tanggungan'],
-        'Ikut Organisasi' => $validated['organisasi'],
-    ];
+        'Ikut Organisasi' => $validated['organisasi'] === 'Ya'
+            ? 'Ikut'
+            : 'Tidak',
+];
 
     try {
         $response = Http::timeout(15)->post(
