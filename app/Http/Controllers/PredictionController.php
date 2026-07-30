@@ -170,7 +170,7 @@ public function __construct()
             'SKS'              => $validated['sks'],
             'Penghasilan'      => $validated['penghasilan'],
             'Tanggungan'       => $validated['tanggungan'],
-            'Ikut Organisasi'  => $validated['organisasi'] === 'Ya' ? 'Ikut' : 'Tidak',
+            'Ikut Organisasi' => $validated['organisasi'],
         ];
 
         try {
