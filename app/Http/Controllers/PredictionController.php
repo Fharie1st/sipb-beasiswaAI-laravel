@@ -202,10 +202,9 @@ class PredictionController extends Controller
                 );
 
                 return response()->json([
-                    'success' => false,
-                    'message' => $flaskError['message']
-                        ?? 'Gagal menghubungi sistem prediksi.',
-                ], $response->status());
+                    'success' => true,
+                    'data' => $predictions,
+                ]);
             }
 
             $result = $response->json();
