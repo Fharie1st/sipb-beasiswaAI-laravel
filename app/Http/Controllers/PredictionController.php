@@ -78,15 +78,14 @@ class PredictionController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // 3. Proses Upload Avatar (Foto Profil) Baru
-        // Foto di-resize & dikompres dulu (maks 400px, kualitas 75) sebelum
-        // disimpan sebagai base64 di kolom 'avatar'. Ini membuat ukurannya
-        // selalu kecil (biasanya puluhan KB saja), jadi tidak akan pernah
-        // menabrak limit max_allowed_packet MySQL, dan tidak ada file yang
-        // ditulis ke folder storage sama sekali.
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
-            $user->avatar = $this->resizeAndEncodeAvatar($file->getRealPath());
+        
+            $filename = time() . '_' . $file->getClientOriginalName();
+        
+            $file->move(public_path('avatars'), $filename);
+        
+            $user->avatar = 'avatars/' . $filename;
         }
 
         // 4. Proses Ubah Password (Jika diisi)
@@ -110,16 +109,6 @@ class PredictionController extends Controller
      * Tujuannya supaya ukuran data yang disimpan ke kolom `avatar` selalu
      * kecil, jadi aman dari limit max_allowed_packet MySQL.
      */
-    private function resizeAndEncodeAvatar(string $path, int $maxSize = 400, int $quality = 75): string
-    {
-        $info = getimagesize($path);
-        $type = $info[2] ?? null;
-
-        $data = file_get_contents($path);
-        
-        return 'data:image/jpeg;base64,' . base64_encode($data);
-
-    }
 
     /**
      * Proses prediksi ke API Python, lalu simpan hasilnya ke database
