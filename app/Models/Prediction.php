@@ -13,6 +13,7 @@ class Prediction extends Model
 protected $fillable = [
     'user_id',
     'nama',
+    'prodi',
     'ipk',
     'kehadiran',
     'prestasi',
@@ -21,7 +22,6 @@ protected $fillable = [
     'semester',
     'hasil',
     'confidence',
-    'prodi',
 ];
 
     protected $casts = [
