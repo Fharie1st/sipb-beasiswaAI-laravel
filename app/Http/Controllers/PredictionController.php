@@ -17,7 +17,12 @@ class PredictionController extends Controller
      * Base URL Flask API. Pindahkan ke .env (FLASK_API_URL) kalau perlu
      * beda antara local/production.
      */
-    protected string $flaskUrl = 'http://127.0.0.1:5000';
+    protected string $flaskUrl;
+
+public function __construct()
+{
+    $this->flaskUrl = env('FLASK_URL');
+}
 
     /**
      * Halaman pilihan fitur
