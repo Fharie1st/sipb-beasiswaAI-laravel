@@ -268,50 +268,64 @@ class PredictionController extends Controller
      * Update satu data riwayat prediksi milik user yang sedang login.
      */
     public function update(Request $request, $id)
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+{
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
 
-        $predictionItem = $user->predictions()->find($id);
+    $predictionItem = $user->predictions()->find($id);
 
-        if (! $predictionItem) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data tidak ditemukan.',
-            ], 404);
-        }
-
-        $validated = $request->validate([
-            'prodi'       => 'required|string',
-            'ipk'         => 'required|numeric|min:0|max:4',
-            'sks'         => 'required|numeric|min:0',
-            'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
-            'tanggungan'  => 'required|numeric|min:0',
-            'organisasi'  => 'required|string|in:Ya,Tidak',
-        ]);
-
-        $predictionItem->update($validated);
-
+    if (! $predictionItem) {
         return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil diperbarui.',
-            'data'    => [
-                'id'          => $predictionItem->id,
-                'nama'        => $predictionItem->nama,
-                'prodi'       => $predictionItem->prodi,
-                'ipk'         => $predictionItem->ipk,
-                'sks'         => $predictionItem->sks,
-                'penghasilan' => $predictionItem->penghasilan,
-                'tanggungan'  => $predictionItem->tanggungan,
-                'organisasi'  => $predictionItem->organisasi,
-                'prediction'  => $predictionItem->prediction,
-                'confidence'  => $predictionItem->confidence,
-                'accuracy'    => $predictionItem->accuracy,
-                'created_at'  => $predictionItem->created_at->format('d M Y, H:i'),
-            ],
-        ]);
+            'success' => false,
+            'message' => 'Data tidak ditemukan.',
+        ], 404);
     }
 
+    $validated = $request->validate([
+        'prodi'       => 'required|string',
+        'ipk'         => 'required|numeric|min:0|max:4',
+        'sks'         => 'required|numeric|min:0',
+        'penghasilan' => 'required|string|in:Rendah,Sedang,Tinggi',
+        'tanggungan'  => 'required|numeric|min:0',
+        'organisasi'  => 'required|string|in:Ya,Tidak',
+    ]);
+
+    // Konversi penghasilan (string -> angka), sama seperti di method predict()
+    $penghasilanValue = match ($validated['penghasilan']) {
+        'Rendah' => 1,
+        'Sedang' => 2,
+        'Tinggi' => 3,
+        default  => 1,
+    };
+
+    $predictionItem->update([
+        'prodi'       => $validated['prodi'],
+        'ipk'         => $validated['ipk'],
+        'sks'         => $validated['sks'],
+        'penghasilan' => $penghasilanValue,
+        'tanggungan'  => $validated['tanggungan'],
+        'organisasi'  => $validated['organisasi'],
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Data berhasil diperbarui.',
+        'data'    => [
+            'id'          => $predictionItem->id,
+            'nama'        => $predictionItem->nama,
+            'prodi'       => $predictionItem->prodi,
+            'ipk'         => $predictionItem->ipk,
+            'sks'         => $predictionItem->sks,
+            'penghasilan' => $predictionItem->penghasilan,
+            'tanggungan'  => $predictionItem->tanggungan,
+            'organisasi'  => $predictionItem->organisasi,
+            'prediction'  => $predictionItem->prediction,
+            'confidence'  => $predictionItem->confidence,
+            'accuracy'    => $predictionItem->accuracy,
+            'created_at'  => $predictionItem->created_at->format('d M Y, H:i'),
+        ],
+    ]);
+}
     /**
      * Hapus satu data riwayat prediksi milik user yang sedang login.
      */
