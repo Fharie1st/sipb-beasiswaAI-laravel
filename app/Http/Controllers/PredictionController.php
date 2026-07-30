@@ -278,7 +278,7 @@ class PredictionController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
+    
         $predictions = $user->predictions()
             ->latest()
             ->get()
@@ -295,8 +295,11 @@ class PredictionController extends Controller
                     'created_at' => $p->created_at->format('d M Y, H:i'),
                 ];
             });
-
-        return response()->json($predictions);
+    
+        return response()->json([
+            'success' => true,
+            'data' => $predictions,
+        ]);
     }
 
     /**
