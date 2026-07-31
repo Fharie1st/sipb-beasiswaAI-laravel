@@ -28,61 +28,33 @@ font-family:'Poppins',sans-serif;
 }
 
 body{
-
-background:#eef3ff;
-
-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-overflow:hidden;
-
+    background:#eef3ff;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow-x:hidden;
+    padding:20px;
 }
 
 /* Card */
 
 .login-wrapper{
-
-width:1200px;
-
-height:720px;
-
-background:white;
-
-border-radius:30px;
-
-overflow:hidden;
-
-display:flex;
-
-box-shadow:0 20px 60px rgba(0,0,0,.12);
-
+    width:100%;
+    max-width:1200px;
+    min-height:720px;
+    background:white;
+    border-radius:30px;
+    overflow:hidden;
+    display:flex;
 }
 
 /* Left */
 
 .left-side{
-
-width:55%;
-
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
-
-color:white;
-
-padding:70px;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-position:relative;
-
+    width:55%;
+    padding:70px;
+    overflow:hidden;
 }
 
 .logo{
@@ -116,27 +88,11 @@ object-fit:contain;
 }
 
 .left-side h1{
-
-font-size:55px;
-
-font-weight:800;
-
-margin-bottom:20px;
-
-line-height:1.1;
-
+    font-size:clamp(32px, 5vw, 55px);
 }
 
 .left-side p{
-
-font-size:18px;
-
-line-height:32px;
-
-color:#dbeafe;
-
-margin-bottom:50px;
-
+    font-size:18px;
 }
 
 .feature{
@@ -162,55 +118,20 @@ color:#4ade80;
 }
 
 .circle{
-
-position:absolute;
-
-width:450px;
-
-height:450px;
-
-background:rgba(255,255,255,.08);
-
-border-radius:50%;
-
-bottom:-170px;
-
-right:-130px;
-
+    width:450px;
+    height:450px;
 }
 
 .circle2{
-
-position:absolute;
-
-width:250px;
-
-height:250px;
-
-background:rgba(255,255,255,.05);
-
-border-radius:50%;
-
-top:-70px;
-
-right:-80px;
-
+    width:250px;
+    height:250px;
 }
 
 /* Right */
 
 .right-side{
-
-width:45%;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-padding:60px;
-
+    width:45%;
+    padding:40px;
 }
 
 .form-box{
@@ -381,6 +302,69 @@ font-size:42px;
 
 }
 
+@media (max-width: 992px){
+
+    body{
+        padding:15px;
+        align-items:flex-start;
+    }
+
+    .login-wrapper{
+        flex-direction:column;
+        min-height:auto;
+    }
+
+    .left-side,
+    .right-side{
+        width:100%;
+    }
+
+    .left-side{
+        padding:40px 30px;
+    }
+
+    .right-side{
+        padding:35px 25px;
+    }
+
+    .logo{
+        position:absolute;
+        top:30px;
+        left:30px;
+    }
+
+    .back-home{
+        position:absolute;
+        top:25px;
+        right:25px;
+    }
+
+    .feature{
+        font-size:15px;
+    }
+
+    .circle,
+    .circle2{
+        display:none;
+    }
+}
+
+@media (max-width:576px){
+
+    .form-box h2{
+        font-size:30px;
+    }
+
+    .form-control,
+    .login-btn{
+        height:52px;
+    }
+
+    .bottom{
+        font-size:14px;
+    }
+}
+
 </style>
 
 </head>
@@ -508,40 +492,44 @@ value="{{ old('email') }}"
 required>
 <div class="password">
 
-<div class="password">
+    <input
+        type="password"
+        name="password"
+        class="form-control"
+        placeholder="Password"
+        required>
 
-<input
-type="password"
-name="password"
-class="form-control"
-placeholder="Password"
-required>
-
-<i class="bi bi-eye"></i>
+    <i class="bi bi-eye"></i>
 
 </div>
 
 <i class="bi bi-eye"></i>
 
-<input
-class="form-check-input"
-type="checkbox"
-name="remember"
-id="remember">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<label
-class="form-check-label"
-for="remember">
+    <div class="form-check">
 
-Remember me
+        <input
+            class="form-check-input"
+            type="checkbox"
+            name="remember"
+            id="remember">
 
-</label>
+        <label
+            class="form-check-label"
+            for="remember">
 
-<a href="#" style="text-decoration:none">
+            Remember me
 
-Lupa Password?
+        </label>
 
-</a>
+    </div>
+
+    <a href="#" style="text-decoration:none">
+        Lupa Password?
+    </a>
+
+</div>
 
 </div>
 
