@@ -29,7 +29,7 @@
                 <div class="row g-4">
 
                     {{-- Kolom Kiri: Foto Profil & Info Singkat --}}
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4">
                         <div class="card border-0 shadow-sm text-center p-4 h-100">
                             <div class="card-body d-flex flex-column align-items-center justify-content-center">
 
@@ -56,7 +56,7 @@
                                 </div>
 
                                 <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
-                                <p class="text-muted small mb-3">{{ $user->email }}</p>
+                                <p class="text-muted small mb-3 text-break">{{ $user->email }}</p>
 
                                 {{-- Input file asli disembunyikan --}}
                                 <input type="file" class="d-none @error('avatar') is-invalid @enderror"
@@ -80,7 +80,7 @@
                     </div>
 
                     {{-- Kolom Kanan: Form Data Utama & Password --}}
-                    <div class="col-md-8">
+                    <div class="col-12 col-md-8">
                         <div class="card border-0 shadow-sm p-4 h-100">
                             <div class="card-body">
                                 <h4 class="fw-bold text-dark mb-4 pb-2 border-bottom">Pengaturan Profil</h4>
@@ -116,7 +116,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-12 col-md-6 mb-3">
                                         <label for="new_password" class="form-label fw-semibold">Password Baru</label>
                                         <input type="password" class="form-control @error('new_password') is-invalid @enderror"
                                                id="new_password" name="new_password" placeholder="Minimal 8 karakter">
@@ -124,7 +124,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6 mb-4">
+                                    <div class="col-12 col-md-6 mb-4">
                                         <label for="new_password_confirmation" class="form-label fw-semibold">Konfirmasi Password Baru</label>
                                         <input type="password" class="form-control"
                                                id="new_password_confirmation" name="new_password_confirmation"
@@ -132,9 +132,9 @@
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary px-4">Kembali</a>
-                                    <button type="submit" class="btn btn-primary px-4 shadow-sm">Simpan Perubahan</button>
+                                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-stretch align-items-sm-center gap-2 pt-3 border-top">
+                                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary px-4 order-2 order-sm-1">Kembali</a>
+                                    <button type="submit" class="btn btn-primary px-4 shadow-sm order-1 order-sm-2">Simpan Perubahan</button>
                                 </div>
 
                             </div>
