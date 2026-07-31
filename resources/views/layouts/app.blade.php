@@ -211,6 +211,7 @@
 
             /* Menu jadi dropdown penuh di bawah navbar saat dibuka */
             .navbar-collapse{
+                display: none;
                 position: absolute;
                 top: 100%;
                 left: 0;
@@ -219,6 +220,10 @@
                 border-bottom: 1px solid #ececec;
                 box-shadow: 0 12px 25px rgba(0,0,0,.06);
                 padding: 16px 20px 20px;
+            }
+
+            .navbar-collapse.show{
+                display: block;
             }
 
             .menu{
@@ -289,13 +294,13 @@
 
         {{-- Tombol hamburger, hanya muncul di layar kecil (lg ke bawah) --}}
         <button class="navbar-toggler d-lg-none" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                id="navToggleBtn"
                 aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
             <i class="bi bi-list"></i>
         </button>
 
-        {{-- Wrapper collapse: di layar besar selalu tampil (flex), di layar kecil di-toggle --}}
-        <div class="collapse navbar-collapse d-lg-flex flex-lg-row justify-content-lg-between align-items-lg-center flex-grow-1"
+        {{-- Wrapper menu: di layar besar selalu tampil (flex), di layar kecil di-toggle manual via JS --}}
+        <div class="navbar-collapse d-lg-flex flex-lg-row justify-content-lg-between align-items-lg-center flex-grow-1"
              id="navbarMain">
 
             <ul class="menu ms-lg-4">
@@ -383,6 +388,54 @@
 
 {{-- Bootstrap JS Bundle --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{{-- Toggle menu mobile: manual, tidak pakai data-bs-toggle supaya tidak dobel-trigger
+     kalau Bootstrap JS ke-load lebih dari sekali (mis. dari @vite dan dari CDN) --}}
+<script>
+    (function () {
+        var btn = document.getElementById('navToggleBtn');
+        var menu = document.getElementById('navbarMain');
+        var icon = btn ? btn.querySelector('i') : null;
+
+        if (!btn || !menu) return;
+
+        function closeMenu() {
+            menu.classList.remove('show');
+            btn.setAttribute('aria-expanded', 'false');
+            if (icon) { icon.classList.remove('bi-x-lg'); icon.classList.add('bi-list'); }
+        }
+
+        function openMenu() {
+            menu.classList.add('show');
+            btn.setAttribute('aria-expanded', 'true');
+            if (icon) { icon.classList.remove('bi-list'); icon.classList.add('bi-x-lg'); }
+        }
+
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (menu.classList.contains('show')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Tutup menu otomatis kalau salah satu link di dalamnya diklik
+        menu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                closeMenu();
+            });
+        });
+
+        // Tutup menu kalau layar di-resize balik ke ukuran desktop
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 992) {
+                closeMenu();
+            }
+        });
+    })();
+</script>
 
 </body>
 </html>
