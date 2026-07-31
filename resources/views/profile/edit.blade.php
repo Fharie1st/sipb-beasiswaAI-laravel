@@ -259,28 +259,6 @@
             .action .start-btn{
                 text-align:center;
             }
-
-            /* ===== FIX: dropdown akun (FahrielF) jadi statis, ikut alur dokumen ===== */
-            .action .dropdown{
-                width: 100%;
-            }
-
-            .action .dropdown-toggle{
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .action .dropdown-menu{
-                position: static !important;
-                float: none !important;
-                inset: auto !important;
-                transform: none !important;
-                width: 100%;
-                margin-top: 10px;
-                box-shadow: none;
-                border: 1px solid #ececec;
-                border-radius: 12px;
-            }
         }
 
         @media (max-width: 575.98px){
@@ -358,9 +336,7 @@
                     <div class="dropdown">
                         <a class="d-flex align-items-center gap-2 text-dark fw-semibold text-decoration-none dropdown-toggle"
                            href="#"
-                           data-bs-toggle="dropdown"
-                           data-bs-display="static"
-                           aria-expanded="false">
+                           data-bs-toggle="dropdown">
                              @if(Auth::user()->avatar)
                                  <img src="{{ Auth::user()->avatar }}" alt="Avatar" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
                              @else
@@ -432,14 +408,6 @@
             menu.classList.remove('show');
             btn.setAttribute('aria-expanded', 'false');
             if (icon) { icon.classList.remove('bi-x-lg'); icon.classList.add('bi-list'); }
-
-            // Tutup juga dropdown akun kalau sedang terbuka
-            var openDropdown = menu.querySelector('.dropdown-menu.show');
-            if (openDropdown) {
-                openDropdown.classList.remove('show');
-                var toggleEl = menu.querySelector('.dropdown-toggle[aria-expanded="true"]');
-                if (toggleEl) toggleEl.setAttribute('aria-expanded', 'false');
-            }
         }
 
         function openMenu() {
@@ -459,9 +427,7 @@
         });
 
         // Tutup menu otomatis kalau salah satu link di dalamnya diklik
-        // (kecuali toggle dropdown akun, biar dropdown-nya sendiri yang mengatur)
         menu.querySelectorAll('a').forEach(function (link) {
-            if (link.classList.contains('dropdown-toggle')) return;
             link.addEventListener('click', function () {
                 closeMenu();
             });
