@@ -247,12 +247,22 @@ class PredictionController extends Controller
             ->latest()
             ->get()
             ->map(function ($p) {
+                // Konversi integer -> label string, kebalikan dari yang di predict()/update()
+                $penghasilanLabel = match ((int) $p->penghasilan) {
+                    1 => 'Rendah',
+                    2 => 'Sedang',
+                    3 => 'Tinggi',
+                    default => 'Rendah',
+                };
+    
                 return [
                     'id' => $p->id,
                     'nama' => $p->nama,
                     'prodi' => $p->prodi,
                     'ipk' => $p->ipk,
-                    'penghasilan' => $p->penghasilan,
+                    'sks' => $p->sks,
+                    'penghasilan' => $penghasilanLabel,
+                    'tanggungan' => $p->tanggungan,
                     'organisasi' => $p->organisasi,
                     'prediction' => $p->hasil,
                     'confidence' => $p->confidence,
