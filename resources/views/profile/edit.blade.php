@@ -1,446 +1,118 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.app')
 
-    <title>@yield('title', 'Sistem Informasi Penerimaan Beasiswa')</title>
+@section('content')
+<div class="container mt-5 pt-4 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            {{-- Notifikasi Sukses --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-    {{-- Bootstrap --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+            {{-- Notifikasi Error Validasi Umum --}}
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Terdapat kesalahan pada inputan Anda. Silakan periksa kembali.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-    {{-- Bootstrap Icons --}}
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
 
-    {{-- Google Font --}}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+                <div class="row g-4">
+                    {{-- Kolom Kiri: Foto Profil & Info Singkat --}}
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm text-center p-4 h-100">
+                            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                <div class="position-relative mb-3">
+                                    @if($user->avatar)
+                                        <img src="{{ $user->avatar }}" alt="Avatar" class="rounded-circle shadow" style="width: 110px; height: 110px; object-fit: cover;">
+                                    @else
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow" style="width: 110px; height: 110px; font-size: 38px; font-weight: bold;">
+                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
+                                <p class="text-muted small mb-3">{{ $user->email }}</p>
 
-    @vite(['resources/css/app.css','resources/js/app.js'])
-
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Poppins',sans-serif;
-        }
-
-        html{
-            scroll-behavior:smooth;
-        }
-
-        body{
-            background:#ffffff;
-            color:#111827;
-            overflow-x:hidden;
-            padding-top: 95px;
-        }
-
-        a{
-            text-decoration:none;
-        }
-
-        .navbar-custom{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255,255,255,.95);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid #ececec;
-            z-index: 9999;
-        }
-
-        .nav-wrapper{
-            position: relative;
-            min-height: 82px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-
-        .brand{
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #111827;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .logo-box{
-            width:48px;
-            height:48px;
-            border-radius:14px;
-            background:#EEF4FF;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            color:#2563EB;
-            font-weight:700;
-            flex-shrink:0;
-            overflow:hidden;
-        }
-
-        .logo-box img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
-
-        /* Toggler hamburger untuk mobile */
-        .navbar-toggler{
-            border:none;
-            background:transparent;
-            font-size:26px;
-            color:#111827;
-            padding:4px 8px;
-        }
-
-        .navbar-toggler:focus{
-            box-shadow:none;
-        }
-
-        .menu{
-            display:flex;
-            gap:28px;
-            list-style:none;
-            margin:0;
-            padding:0;
-        }
-
-        .menu a{
-            color:#6B7280;
-            font-weight:500;
-            transition:.3s;
-        }
-
-        .menu a:hover{
-            color:#2563EB;
-        }
-
-        .action{
-            display:flex;
-            align-items:center;
-            gap:18px;
-        }
-
-        .login-btn{
-            color:#111827;
-            font-weight:600;
-        }
-
-        .start-btn{
-            background:#111827;
-            color:white;
-            padding:12px 24px;
-            border-radius:50px;
-            font-weight:600;
-            transition:.3s;
-            white-space:nowrap;
-        }
-
-        .start-btn:hover{
-            background:#2563EB;
-            color:white;
-        }
-
-        footer{
-            background:#111827;
-            color:white;
-            padding:35px 0;
-        }
-
-        #chatButton{
-            position:fixed;
-            right:30px;
-            bottom:30px;
-            z-index:99999;
-        }
-
-        #openChat{
-            width:68px;
-            height:68px;
-            border:none;
-            border-radius:50%;
-            background:#2563EB;
-            color:white;
-            font-size:28px;
-            cursor:pointer;
-            box-shadow:0 12px 35px rgba(37,99,235,.35);
-            transition:.35s;
-            animation:floatButton 2.5s ease-in-out infinite;
-        }
-
-        #openChat:hover{
-            transform:scale(1.08);
-            background:#1D4ED8;
-        }
-
-        @keyframes floatButton{
-            0%{transform:translateY(0);}
-            50%{transform:translateY(-8px);}
-            100%{transform:translateY(0);}
-        }
-
-        /* ================= RESPONSIVE (TABLET & MOBILE) ================= */
-        @media (max-width: 991.98px){
-            body{
-                padding-top: 78px;
-            }
-
-            .nav-wrapper{
-                min-height: 68px;
-            }
-
-            .brand{
-                font-size: 22px;
-            }
-
-            .logo-box{
-                width:40px;
-                height:40px;
-                border-radius:12px;
-            }
-
-            /* Menu jadi dropdown penuh di bawah navbar saat dibuka */
-            .navbar-collapse{
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                max-height: calc(100vh - 78px);
-                overflow-y: auto;
-                background: #ffffff;
-                border: 1px solid #ececec;
-                border-top: none;
-                border-radius: 0 0 16px 16px;
-                box-shadow: 0 12px 25px rgba(0,0,0,.08);
-                padding: 16px 20px 20px;
-            }
-
-            .navbar-collapse.show{
-                display: block;
-            }
-
-            .menu{
-                flex-direction: column;
-                gap: 14px;
-                width: 100%;
-            }
-
-            .menu a{
-                display:block;
-                padding:8px 0;
-                border-bottom:1px solid #f3f4f6;
-            }
-
-            .action{
-                flex-direction: column;
-                align-items: stretch;
-                width: 100%;
-                gap: 10px;
-                margin-top: 14px;
-            }
-
-            .action .login-btn{
-                text-align:center;
-                padding:10px 0;
-            }
-
-            .action .start-btn{
-                text-align:center;
-            }
-        }
-
-        @media (max-width: 575.98px){
-            .brand span{
-                font-size: 18px;
-            }
-
-            #chatButton{
-                right: 16px;
-                bottom: 16px;
-            }
-
-            #openChat{
-                width: 56px;
-                height: 56px;
-                font-size: 22px;
-            }
-
-            footer{
-                padding: 24px 0;
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar-custom">
-    <div class="container nav-wrapper">
-        <a href="/" class="brand">
-            <div class="logo-box">
-                <img src="{{ asset('images/logo beasiswa.png') }}" alt="Logo SIPB">
-            </div>
-            <span>SIPB</span>
-        </a>
-
-        {{-- Tombol hamburger, hanya muncul di layar kecil (lg ke bawah) --}}
-        <button class="navbar-toggler d-lg-none" type="button"
-                id="navToggleBtn"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="bi bi-list"></i>
-        </button>
-
-        {{-- Wrapper menu: di layar besar selalu tampil (flex), di layar kecil di-toggle manual via JS --}}
-        <div class="navbar-collapse d-lg-flex flex-lg-row justify-content-lg-between align-items-lg-center flex-grow-1"
-             id="navbarMain">
-
-            <ul class="menu ms-lg-4">
-                <li>
-                    <a href="{{ route('dashboard') }}">Beranda</a>
-                </li>
-                <li>
-                    <a href="{{ route('dashboard') }}#prediksi">Mulai Prediksi</a>
-                </li>
-                <li>
-                    <a href="{{ route('berita') }}">Berita</a>
-                </li>
-                <li>
-                    <a href="{{ route('informasi') }}">Informasi</a>
-                </li>
-                <li>
-                    <a href="{{ route('tentang') }}">Tentang</a>
-                </li>
-            </ul>
-
-            <div class="action">
-                @guest
-                    <a href="{{ route('login') }}" class="login-btn">Login</a>
-                    <a href="{{ route('register') }}" class="start-btn">Mulai</a>
-                @endguest
-
-                @auth
-                    <div class="dropdown">
-                        <a class="d-flex align-items-center gap-2 text-dark fw-semibold text-decoration-none dropdown-toggle"
-                           href="#"
-                           data-bs-toggle="dropdown">
-                             @if(Auth::user()->avatar)
-                                 <img src="{{ Auth::user()->avatar }}" alt="Avatar" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
-                             @else
-                                 <div style="width:42px; height:42px; border-radius:50%; background:#2563EB; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px;">
-                                     {{ strtoupper(substr(Auth::user()->name,0,1)) }}
-                                 </div>
-                             @endif
-                             {{ Auth::user()->name }}
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                    <i class="bi bi-house me-2"></i> Dashboard
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('prediction.index') }}">
-                                    <i class="bi bi-cpu me-2"></i> Prediksi
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                    <i class="bi bi-person-gear me-2"></i> Pengaturan Profil
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
+                                <div class="w-100 text-start">
+                                    <label for="avatar" class="form-label fw-semibold small text-secondary">Ganti Foto Profil</label>
+                                    <input type="file" class="form-control form-control-sm @error('avatar') is-invalid @enderror" id="avatar" name="avatar" accept=".jpg,.jpeg,.png">
+                                    <div class="form-text text-muted" style="font-size: 11px;">Format: JPG, JPEG, PNG (Maks. 2MB)</div>
+                                    @error('avatar')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @endauth
-            </div>
+
+                    {{-- Kolom Kanan: Form Data Utama & Password --}}
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm p-4 h-100">
+                            <div class="card-body">
+                                <h4 class="fw-bold text-dark mb-4 pb-2 border-bottom">Pengaturan Profil</h4>
+
+                                <div class="mb-3">
+                                    <label for="name" class="form-label fw-semibold">Nama Lengkap</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="email" class="form-label fw-semibold">Alamat Email</label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <h5 class="fw-bold text-dark mb-3 pt-3 border-top">Ubah Kata Sandi</h5>
+
+                                <div class="mb-3">
+                                    <label for="current_password" class="form-label fw-semibold">Password Saat Ini</label>
+                                    <input type="password" class="form-control @error('current_password') is-invalid @enderror" id="current_password" name="current_password" placeholder="Kosongkan jika tidak ingin mengubah">
+                                    @error('current_password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="new_password" class="form-label fw-semibold">Password Baru</label>
+                                        <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="new_password" name="new_password" placeholder="Minimal 8 karakter">
+                                        @error('new_password')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label for="new_password_confirmation" class="form-label fw-semibold">Konfirmasi Password Baru</label>
+                                        <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="Ulangi password baru">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary px-4">Kembali</a>
+                                    <button type="submit" class="btn btn-primary px-4 shadow-sm">Simpan Perubahan</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
-</nav>
-
-{{-- Isi halaman --}}
-<div class="container" style="margin-top: 20px;">
-    @yield('content')
 </div>
-
-<footer>
-    <div class="container text-center">
-        © {{ date('Y') }} Sistem Informasi Penerimaan Beasiswa Menggunakan Metode Decision Tree
-    </div>
-</footer>
-
-{{-- Bootstrap JS Bundle --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-{{-- Toggle menu mobile: manual, tidak pakai data-bs-toggle supaya tidak dobel-trigger
-     kalau Bootstrap JS ke-load lebih dari sekali (mis. dari @vite dan dari CDN) --}}
-<script>
-    (function () {
-        var btn = document.getElementById('navToggleBtn');
-        var menu = document.getElementById('navbarMain');
-        var icon = btn ? btn.querySelector('i') : null;
-
-        if (!btn || !menu) return;
-
-        function closeMenu() {
-            menu.classList.remove('show');
-            btn.setAttribute('aria-expanded', 'false');
-            if (icon) { icon.classList.remove('bi-x-lg'); icon.classList.add('bi-list'); }
-        }
-
-        function openMenu() {
-            menu.classList.add('show');
-            btn.setAttribute('aria-expanded', 'true');
-            if (icon) { icon.classList.remove('bi-list'); icon.classList.add('bi-x-lg'); }
-        }
-
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (menu.classList.contains('show')) {
-                closeMenu();
-            } else {
-                openMenu();
-            }
-        });
-
-        // Tutup menu otomatis kalau salah satu link di dalamnya diklik
-        menu.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', function () {
-                closeMenu();
-            });
-        });
-
-        // Tutup menu kalau layar di-resize balik ke ukuran desktop
-        window.addEventListener('resize', function () {
-            if (window.innerWidth >= 992) {
-                closeMenu();
-            }
-        });
-    })();
-</script>
-
-</body>
-</html>
+@endsection
