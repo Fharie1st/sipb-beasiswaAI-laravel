@@ -63,6 +63,7 @@
             gap: 10px;
             padding-top: 10px;
             padding-bottom: 10px;
+            position:relative;
         }
 
         .brand{
@@ -113,6 +114,14 @@
             list-style:none;
             margin:0;
             padding:0;
+        }
+
+        .navbar-collapse{
+            flex:1;
+        }
+
+        .action{
+            margin-left:auto;
         }
 
         .menu a{
@@ -226,23 +235,6 @@
                 display: block;
             }
 
-            @media (min-width: 992px){
-
-            .navbar-collapse{
-                display:flex !important;
-                justify-content:space-between;
-                align-items:center;
-                flex:1;
-            }
-        
-            .menu{
-                margin-left:50px;
-            }
-        
-            .action{
-                margin-left:auto;
-            }
-        }
 
             .menu{
                 flex-direction: column;
@@ -318,7 +310,8 @@
         </button>
 
         {{-- Wrapper menu: di layar besar selalu tampil (flex), di layar kecil di-toggle manual via JS --}}
-        <div class="<div class="navbar-collapse" id="navbarMain">
+        <div class="navbar-collapse d-lg-flex flex-lg-row justify-content-lg-between align-items-lg-center flex-grow-1"
+             id="navbarMain">
 
             <ul class="menu ms-lg-4">
                 <li>
