@@ -15,6 +15,8 @@ protected $fillable = [
     'nama',
     'prodi',
     'ipk',
+    'sks',
+    'tanggungan',
     'kehadiran',
     'prestasi',
     'organisasi',
