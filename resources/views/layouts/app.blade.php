@@ -55,11 +55,11 @@
         }
 
         .nav-wrapper{
-            min-height: 82px;
-            display: flex;
-            flex-wrap: wrap;
+            min-height:82px;
+            display:flex;
+            flex-wrap:nowrap;
             justify-content: space-between;
-            align-items: center;
+            align-items:center;
             gap: 10px;
             padding-top: 10px;
             padding-bottom: 10px;
@@ -226,6 +226,24 @@
                 display: block;
             }
 
+            @media (min-width: 992px){
+
+            .navbar-collapse{
+                display:flex !important;
+                justify-content:space-between;
+                align-items:center;
+                flex:1;
+            }
+        
+            .menu{
+                margin-left:50px;
+            }
+        
+            .action{
+                margin-left:auto;
+            }
+        }
+
             .menu{
                 flex-direction: column;
                 gap: 14px;
@@ -300,8 +318,7 @@
         </button>
 
         {{-- Wrapper menu: di layar besar selalu tampil (flex), di layar kecil di-toggle manual via JS --}}
-        <div class="navbar-collapse d-lg-flex flex-lg-row justify-content-lg-between align-items-lg-center flex-grow-1"
-             id="navbarMain">
+        <div class="<div class="navbar-collapse" id="navbarMain">
 
             <ul class="menu ms-lg-4">
                 <li>
