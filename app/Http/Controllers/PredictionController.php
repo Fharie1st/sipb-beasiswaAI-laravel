@@ -321,9 +321,8 @@ class PredictionController extends Controller
             'penghasilan' => $predictionItem->penghasilan,
             'tanggungan'  => $predictionItem->tanggungan,
             'organisasi'  => $predictionItem->organisasi,
-            'prediction'  => $predictionItem->prediction,
+            'prediction'  => $predictionItem->hasil,
             'confidence'  => $predictionItem->confidence,
-            'accuracy'    => $predictionItem->accuracy,
             'created_at'  => $predictionItem->created_at->format('d M Y, H:i'),
         ],
     ]);
