@@ -66,7 +66,7 @@
     }
 
     .hero h1{
-        font-size: 60px;
+        font-size: clamp(32px, 6vw, 60px);
         font-weight: 800;
         line-height: 1.15;
         color: #111827;
@@ -167,7 +167,7 @@
         border-bottom: 1px solid #ececec;
     }
     .showcase-heading {
-        font-size: 40px;
+        font-size: clamp(28px, 4vw, 40px);
         font-weight: 700;
         color: #111827;
         margin-bottom: 20px;
@@ -330,7 +330,7 @@
         text-align: center;
     }
     .howworks-title {
-        font-size: 38px;
+        font-size: clamp(28px, 4vw, 38px);
         font-weight: 700;
         color: #111827;
         margin-bottom: 16px;
@@ -389,6 +389,51 @@
         line-height: 1.7;
         margin: 0;
     }
+
+    @media (max-width: 768px){
+
+    .hero{
+        padding: 30px 0;
+    }
+
+    .hero p,
+    .showcase-text,
+    .howworks-subtitle,
+    .section-subtitle{
+        font-size: 14px;
+    }
+
+    .mock-chat-card{
+        padding: 18px;
+    }
+
+    .mock-user-msg{
+        max-width: 100%;
+    }
+
+    .howworks-card{
+        padding: 20px;
+    }
+
+    .section-title,
+    .showcase-heading,
+    .howworks-title{
+        text-align: center;
+    }
+
+    .showcase-list li{
+        font-size: 14px;
+    }
+
+    .btn-main,
+    .btn-primary{
+        width: 100%;
+    }
+
+    .row{
+        --bs-gutter-x: 1rem;
+    }
+}
 
 </style>
 
@@ -514,22 +559,22 @@
     <div class="container">
         <div class="row text-center">
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <h2 class="fw-bold text-primary">833+</h2>
                 <p>Data Mahasiswa</p>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <h2 class="fw-bold text-primary">6</h2>
                 <p>Faktor Penilaian</p>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <h2 class="fw-bold text-primary">Decision Tree</h2>
                 <p>Algoritma Klasifikasi</p>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
                 <h2 class="fw-bold text-primary">24/7</h2>
                 <p>Akses Sistem</p>
             </div>
