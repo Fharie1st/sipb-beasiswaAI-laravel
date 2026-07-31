@@ -178,6 +178,8 @@ class PredictionController extends Controller
                 'nama'        => Auth::user()->name,
                 'prodi'       => $validated['prodi'],
                 'ipk'         => $validated['ipk'],
+                'sks'         => $validated['sks'],
+                'tanggungan'  => $validated['tanggungan'],
                 'kehadiran'   => 0,
                 'prestasi'    => 'Tidak',
                 'organisasi'  => $validated['organisasi'],
